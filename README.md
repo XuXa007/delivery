@@ -114,13 +114,13 @@
 1. Убедитесь, что PostgreSQL установлен и запущен на вашем компьютере
 2. Создайте базу данных перед запуском приложения:
    ```sql
-   CREATE DATABASE deliverydb;
+   CREATE DATABASE delivery_db;
    ```
 3. Настройки подключения к БД могут быть изменены в файле `application.properties`
 4. Миграции базы данных осуществляются с помощью Flyway
 
 По умолчанию используются следующие настройки:
-- JDBC URL: `jdbc:postgresql://localhost:5432/deliverydb`
+- JDBC URL: `jdbc:postgresql://localhost:5432/delivery_db`
 - Username: `postgres`
 - Password: `postgres`
 
