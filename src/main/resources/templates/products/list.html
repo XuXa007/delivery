@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Продукты | Система приемки поставок</title>
+</head>
+<body>
+<main>
+    <div class="container px-4 py-5">
+        <h1 class="pb-2 border-bottom">Продукты</h1>
+
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Список продуктов</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Название</th>
+                                <th scope="col">Тип</th>
+                                <th scope="col">Описание</th>
+                                <th scope="col">Действия</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="product : ${products}">
+                                <td th:text="${product.id}">1</td>
+                                <td th:text="${product.name}">Название продукта</td>
+                                <td th:text="${product.productType}">Тип продукта</td>
+                                <td th:text="${product.description}">Описание</td>
+                                <td>
+                                    <a th:href="@{/web/products/{id}(id=${product.id})}" class="btn btn-sm btn-primary">Редактировать</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Добавить новый продукт</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/web/products}" th:object="${newProduct}" method="post">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Название</label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productType" class="form-label">Тип продукта</label>
+                                <select class="form-select" id="productType" th:field="*{productType}" required>
+                                    <option value="" selected>Выберите тип</option>
+                                    <option th:each="type : ${productTypes}"
+                                            th:value="${type}"
+                                            th:text="${type.displayName}">Тип продукта</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Описание</label>
+                                <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Добавить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

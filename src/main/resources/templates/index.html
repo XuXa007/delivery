@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Главная | Система приемки поставок</title>
+</head>
+<body>
+<main>
+    <div class="container px-4 py-5">
+        <h1 class="pb-2 border-bottom">Система приемки поставок от поставщиков</h1>
+
+        <div class="row g-4 py-5">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Поставщики</h5>
+                        <p class="card-text">Управление поставщиками в системе.</p>
+                        <a href="/web/providers" class="btn btn-primary">Перейти</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Продукты</h5>
+                        <p class="card-text">Управление продуктами в системе.</p>
+                        <a href="/web/products" class="btn btn-primary">Перейти</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Поставки</h5>
+                        <p class="card-text">Управление поставками от поставщиков.</p>
+                        <a href="/web/deliveries" class="btn btn-primary">Перейти</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Отчеты</h5>
+                        <p class="card-text">Формирование отчетов по поставкам.</p>
+                        <a href="/web/reports" class="btn btn-primary">Перейти</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>О системе</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Система предназначена для учета и управления поставками продукции от различных поставщиков.</p>
+                        <p>В системе реализованы следующие возможности:</p>
+                        <ul>
+                            <li>Управление поставщиками</li>
+                            <li>Управление продукцией (яблоки и груши разных сортов)</li>
+                            <li>Управление прайс-листами</li>
+                            <li>Регистрация поставок</li>
+                            <li>Формирование отчетов по поставкам</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

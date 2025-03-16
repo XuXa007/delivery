@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Редактирование продукта | Система приемки поставок</title>
+</head>
+<body>
+<main>
+    <div class="container px-4 py-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="pb-2">Редактирование продукта</h1>
+            <a th:href="@{/web/products}" class="btn btn-secondary">Назад к списку</a>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Данные продукта</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/web/products/{id}(id=${product.id})}" th:object="${product}" method="post">
+                            <input type="hidden" th:field="*{id}">
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Название</label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productType" class="form-label">Тип продукта</label>
+                                <select class="form-select" id="productType" th:field="*{productType}" required>
+                                    <option th:each="type : ${productTypes}"
+                                            th:value="${type}"
+                                            th:text="${type.displayName}"
+                                            th:selected="${type == product.productType}">Тип продукта</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Описание</label>
+                                <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Сохранить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

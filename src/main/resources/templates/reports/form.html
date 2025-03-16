@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Отчеты | Система приемки поставок</title>
+</head>
+<body>
+<main>
+    <div class="container px-4 py-5">
+        <h1 class="pb-2 border-bottom">Формирование отчетов</h1>
+
+        <div class="row mt-4">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Отчет о поставках за период</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/web/reports/generate}" method="get">
+                            <div class="mb-3">
+                                <label for="startDate" class="form-label">Начало периода</label>
+                                <input type="datetime-local" class="form-control" id="startDate" name="startDate" th:value="${#temporals.format(startDate, 'yyyy-MM-dd''T''HH:mm')}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="endDate" class="form-label">Конец периода</label>
+                                <input type="datetime-local" class="form-control" id="endDate" name="endDate" th:value="${#temporals.format(endDate, 'yyyy-MM-dd''T''HH:mm')}" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Сформировать отчет</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Просмотр поставки | Система приемки поставок</title>
+</head>
+<body>
+<main>
+    <div class="container px-4 py-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="pb-2">Просмотр поставки</h1>
+            <a th:href="@{/web/deliveries}" class="btn btn-secondary">Назад к списку</a>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Данные поставки</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <p><strong>ID поставки:</strong> <span th:text="${delivery.id}">1</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Поставщик:</strong> <span th:text="${delivery.providerName}">Название поставщика</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Дата поставки:</strong> <span th:text="${#temporals.format(delivery.deliveryDate, 'dd.MM.yyyy HH:mm')}">01.01.2024 10:00</span></p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <p><strong>Комментарий:</strong> <span th:text="${delivery.comment ?: 'Нет комментария'}">Комментарий к поставке</span></p>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Позиции поставки</h5>
+
+                        <table class="table table-striped mt-3">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Продукт</th>
+                                <th scope="col">Количество</th>
+                                <th scope="col">Цена за единицу</th>
+                                <th scope="col">Общая стоимость</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${delivery.items}">
+                                <td th:text="${item.id}">1</td>
+                                <td th:text="${item.productName}">Название продукта</td>
+                                <td th:text="${item.quantity}">100</td>
+                                <td th:text="${item.price}">85.50</td>
+                                <td th:text="${item.totalPrice}">8550.00</td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr class="table-primary">
+                                <td colspan="2" class="text-end"><strong>Итого:</strong></td>
+                                <td>
+                                    <strong>
+                                        <span th:text="${#aggregates.sum(delivery.items.![quantity])}">100</span>
+                                    </strong>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <strong>
+                                        <span th:text="${#aggregates.sum(delivery.items.![totalPrice])}">8550.00</span>
+                                    </strong>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

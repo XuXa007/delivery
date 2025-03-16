@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Отчет о поставках | Система приемки поставок</title>
+</head>
+<body>
+<main>
+    <div class="container-fluid px-4 py-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="pb-2">Отчет о поставках за период</h1>
+            <a th:href="@{/web/reports}" class="btn btn-secondary">Назад к форме</a>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <strong>Период отчета:</strong>
+                    <span th:text="${#temporals.format(startDate, 'dd.MM.yyyy HH:mm')}">01.01.2024 00:00</span> -
+                    <span th:text="${#temporals.format(endDate, 'dd.MM.yyyy HH:mm')}">31.01.2024 23:59</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card mb-4" th:each="providerReport : ${report.providerReports}">
+                    <div class="card-header bg-primary text-white">
+                        <h5 th:text="${providerReport.providerName}">Название поставщика</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Продукт</th>
+                                <th scope="col">Тип</th>
+                                <th scope="col">Общий вес/количество</th>
+                                <th scope="col">Общая стоимость</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="productReport : ${providerReport.products}">
+                                <td th:text="${productReport.productName}">Название продукта</td>
+                                <td th:text="${productReport.productType}">Тип продукта</td>
+                                <td th:text="${productReport.totalWeight}">100</td>
+                                <td th:text="${productReport.totalCost}">8550.00</td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr class="table-primary">
+                                <td colspan="2" class="text-end"><strong>Итого по поставщику:</strong></td>
+                                <td><strong th:text="${providerReport.totalWeight}">100</strong></td>
+                                <td><strong th:text="${providerReport.totalCost}">8550.00</strong></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5>Общие итоги</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="alert alert-success">
+                                    <h5>Общий объем/вес: <span th:text="${report.totalWeight}">500</span></h5>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="alert alert-success">
+                                    <h5>Общая стоимость: <span th:text="${report.totalCost}">42500.00</span></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <button onclick="window.print()" class="btn btn-lg btn-primary">
+                    <i class="bi bi-printer"></i> Печать отчета
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

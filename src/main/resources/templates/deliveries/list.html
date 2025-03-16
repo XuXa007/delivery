@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Поставки | Система приемки поставок</title>
+</head>
+<body>
+<main>
+    <div class="container px-4 py-5">
+        <h1 class="pb-2 border-bottom">Поставки</h1>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Список поставок</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Поставщик</th>
+                                <th scope="col">Дата поставки</th>
+                                <th scope="col">Количество позиций</th>
+                                <th scope="col">Действия</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="delivery : ${deliveries}">
+                                <td th:text="${delivery.id}">1</td>
+                                <td th:text="${delivery.providerName}">Название поставщика</td>
+                                <td th:text="${#temporals.format(delivery.deliveryDate, 'dd.MM.yyyy HH:mm')}">01.01.2024 10:00</td>
+                                <td th:text="${delivery.items.size()}">3</td>
+                                <td>
+                                    <a th:href="@{/web/deliveries/{id}(id=${delivery.id})}" class="btn btn-sm btn-primary">Просмотреть</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Создать новую поставку</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="deliveryForm" th:action="@{/web/deliveries}" method="post">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="providerId" class="form-label">Поставщик</label>
+                                        <select class="form-select" id="providerId" name="providerId" required>
+                                            <option value="" selected>Выберите поставщика</option>
+                                            <option th:each="provider : ${providers}"
+                                                    th:value="${provider.id}"
+                                                    th:text="${provider.name}">Поставщик</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="deliveryDate" class="form-label">Дата поставки</label>
+                                        <input type="datetime-local" class="form-control" id="deliveryDate" name="deliveryDate" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="comment" class="form-label">Комментарий</label>
+                                        <input type="text" class="form-control" id="comment" name="comment">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4">Позиции поставки</h5>
+
+                            <div id="deliveryItems">
+                                <div class="delivery-item row border p-3 mb-3">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Продукт</label>
+                                            <select class="form-select" name="items[0].productId" required>
+                                                <option value="" selected>Выберите продукт</option>
+                                                <option th:each="product : ${products}"
+                                                        th:value="${product.id}"
+                                                        th:text="${product.name}">Продукт</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Количество</label>
+                                            <input type="number" step="0.001" min="0.001" class="form-control" name="items[0].quantity" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Цена</label>
+                                            <input type="number" step="0.01" min="0.01" class="form-control" name="items[0].price" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="button" class="btn btn-danger mb-3 remove-item">Удалить</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="button" id="addItem" class="btn btn-secondary">Добавить позицию</button>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary">Создать поставку</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Установка текущей даты и времени для поля даты поставки
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+
+            document.getElementById('deliveryDate').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+            // Обработчик для кнопки "Добавить позицию"
+            let itemCount = 1;
+            document.getElementById('addItem').addEventListener('click', function() {
+                const deliveryItems = document.getElementById('deliveryItems');
+                const itemTemplate = document.querySelector('.delivery-item').cloneNode(true);
+
+                // Обновление индексов в именах полей
+                const selects = itemTemplate.querySelectorAll('select');
+                const inputs = itemTemplate.querySelectorAll('input');
+
+                selects.forEach(select => {
+                    const name = select.getAttribute('name');
+                    select.setAttribute('name', name.replace(/\[\d+\]/, `[${itemCount}]`));
+                    select.value = '';
+                });
+
+                inputs.forEach(input => {
+                    const name = input.getAttribute('name');
+                    input.setAttribute('name', name.replace(/\[\d+\]/, `[${itemCount}]`));
+                    input.value = '';
+                });
+
+                // Добавление обработчика для кнопки "Удалить"
+                const removeButton = itemTemplate.querySelector('.remove-item');
+                removeButton.addEventListener('click', function() {
+                    itemTemplate.remove();
+                });
+
+                deliveryItems.appendChild(itemTemplate);
+                itemCount++;
+            });
+
+            // Обработчик для исходной кнопки "Удалить"
+            document.querySelector('.remove-item').addEventListener('click', function() {
+                if (document.querySelectorAll('.delivery-item').length > 1) {
+                    this.closest('.delivery-item').remove();
+                }
+            });
+        });
+    </script>
+</main>
+</body>
+</html>
